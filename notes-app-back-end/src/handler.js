@@ -1,15 +1,15 @@
-const {nanoid} = require('nanoid');
+const { nanoid } = require('nanoid');
 const notes = require('./notes');
 
 const addNoteHandler = (request, h) => {
-  const {title, tags, body} = request.payload;
+  const { title = 'untitled', tags, body } = request.payload;
 
   const id = nanoid(16);
   const createdAt = new Date().toISOString();
-  const updateAt = createdAt;
+  const updatedAt = createdAt;
 
   const newNote = {
-    title, tags, body, id, createdAt, updateAt,
+    title, tags, body, id, createdAt, updatedAt,
   };
 
   notes.push(newNote);
@@ -44,7 +44,7 @@ const getAllNotesHandler = () => ({
 });
 
 const getNoteByIdHandler = (request, h) => {
-  const {id} = request.params;
+  const { id } = request.params;
 
   const note = notes.filter((n) => n.id === id)[0];
 
@@ -66,10 +66,10 @@ const getNoteByIdHandler = (request, h) => {
 };
 
 const editNoteByIdHandler = (request, h) => {
-  const {id} = request.params;
+  const { id } = request.params;
 
-  const {title, tags, body} = request.payload;
-  const updateAt = new Date().toISOString();
+  const { title, tags, body } = request.payload;
+  const updatedAt = new Date().toISOString();
 
   const index = notes.findIndex((note) => note.id === id);
 
@@ -77,9 +77,9 @@ const editNoteByIdHandler = (request, h) => {
     notes[index] = {
       ...notes[index],
       title,
-      body,
       tags,
-      updateAt,
+      body,
+      updatedAt,
     };
 
     const response = h.response({
@@ -99,7 +99,7 @@ const editNoteByIdHandler = (request, h) => {
 };
 
 const deleteNoteByIdHandler = (request, h) => {
-  const {id} = request.params;
+  const { id } = request.params;
 
   const index = notes.findIndex((note) => note.id === id);
 
@@ -107,7 +107,7 @@ const deleteNoteByIdHandler = (request, h) => {
     notes.splice(index, 1);
     const response = h.response({
       status: 'success',
-      message: 'CAtatan berhasil dihapus',
+      message: 'Catatan berhasil dihapus',
     });
     response.code(200);
     return response;
